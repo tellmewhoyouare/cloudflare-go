@@ -174,6 +174,20 @@ type ZoneSSLSetting struct {
 	CertificateStatus string `json:"certificate_status"`
 }
 
+type ZoneAlwaysHTTPSSetting struct {
+	Value string `json:"value"`
+}
+
+type ZoneAlwaysHTTPSSettingResponse struct {
+	Response
+	Result struct {
+		ID         string `json:"id"`
+		Editable   bool   `json:"editable"`
+		ModifiedOn string `json:"modified_on"`
+		Value      string `json:"value"`
+	} `json:"result"`
+}
+
 // ZoneSSLSettingResponse represents the response from the Zone SSL Setting
 // endpoint.
 type ZoneSSLSettingResponse struct {
@@ -846,6 +860,20 @@ func (api *API) ZoneSSLSettings(ctx context.Context, zoneID string) (ZoneSSLSett
 		return ZoneSSLSetting{}, fmt.Errorf("%s: %w", errUnmarshalError, err)
 	}
 	return r.Result, nil
+}
+
+func (api *API) UpdateZoneAlwaysHTTPSSettings(ctx context.Context, zoneID string) (ZoneAlwaysHTTPSSettingResponse, error) {
+	uri := fmt.Sprintf("/zones/%s/settings/ssl", zoneID)
+	res, err := api.makeRequestContext(ctx, http.MethodPatch, uri, ZoneAlwaysHTTPSSetting{Value: "on"})
+	if err != nil {
+		return ZoneAlwaysHTTPSSettingResponse{}, err
+	}
+	var r ZoneAlwaysHTTPSSettingResponse
+	err = json.Unmarshal(res, &r)
+	if err != nil {
+		return ZoneAlwaysHTTPSSettingResponse{}, fmt.Errorf("%s: %w", errUnmarshalError, err)
+	}
+	return r, nil
 }
 
 // UpdateZoneSSLSettings update information about SSL setting to the specified zone.
