@@ -862,9 +862,9 @@ func (api *API) ZoneSSLSettings(ctx context.Context, zoneID string) (ZoneSSLSett
 	return r.Result, nil
 }
 
-func (api *API) UpdateZoneAlwaysHTTPSSettings(ctx context.Context, zoneID string) (ZoneAlwaysHTTPSSettingResponse, error) {
-	uri := fmt.Sprintf("/zones/%s/settings/ssl", zoneID)
-	res, err := api.makeRequestContext(ctx, http.MethodPatch, uri, ZoneAlwaysHTTPSSetting{Value: "on"})
+func (api *API) UpdateZoneAlwaysHTTPSSettings(ctx context.Context, zoneID string, params *ZoneAlwaysHTTPSSetting) (ZoneAlwaysHTTPSSettingResponse, error) {
+	uri := fmt.Sprintf("/zones/%s/settings/always_use_https", zoneID)
+	res, err := api.makeRequestContext(ctx, http.MethodPatch, uri, params)
 	if err != nil {
 		return ZoneAlwaysHTTPSSettingResponse{}, err
 	}
